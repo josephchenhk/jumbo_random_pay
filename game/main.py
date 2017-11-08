@@ -76,7 +76,7 @@ class Roulette(object):
     
     def spin(self):
         """Instead of rotating the reel, we alternatively choose a output symbol
-        from the reel.
+        from the reel randomly.
         """
         self.output = random.choice(self.reel)
         
@@ -110,11 +110,29 @@ class Roulette(object):
         return total_wager, total_payment
     
 if __name__=="__main__":
-    Nround = 100000000
+    Nround = 200000000
     roulette = Roulette()
+    
+    tic = time.time()
+    total_wager, total_payment = roulette.play("normal", 1, Nround)
+    toc = time.time()
+    print("\n<Mode Normal>")
+    print("Elapsed time: {:.2f} seconds".format(toc-tic))
+    print("Wager: {}, Payment: {}".format(total_wager, total_payment))
+    print("RTP: {:.4f}".format(total_payment*1.0/total_wager))
+    
     tic = time.time()
     total_wager, total_payment = roulette.play("mode1", 1, Nround)
     toc = time.time()
+    print("\n<Mode 1>")
+    print("Elapsed time: {:.2f} seconds".format(toc-tic))
+    print("Wager: {}, Payment: {}".format(total_wager, total_payment))
+    print("RTP: {:.4f}".format(total_payment*1.0/total_wager))
+
+    tic = time.time()
+    total_wager, total_payment = roulette.play("mode2", 1, Nround)
+    toc = time.time()
+    print("\n<Mode 2>")
     print("Elapsed time: {:.2f} seconds".format(toc-tic))
     print("Wager: {}, Payment: {}".format(total_wager, total_payment))
     print("RTP: {:.4f}".format(total_payment*1.0/total_wager))
