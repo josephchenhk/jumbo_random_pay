@@ -80,19 +80,21 @@ class Roulette(object):
         """
         self.output = random.choice(self.reel)
         
-    def check_payment(self, choice):
+    def check_payment(self, choices):
         """Check the payment of a single bet
-        param choice: int 1-37, the symbol a player chooses to bet
+        param choices: list of int (int 1-37), the symbols a player chooses to bet
         return payment: the amount of money returning to player (including wager)
         """
-        if self.output==choice:
-            return self.pay_table[choice]+1
-        else:
-            return 0
+        payment = 0
+        for choice in choices:
+            if self.output==choice:
+                payment += self.pay_table[choice]+1
+        return payment
+            
     
-    def play(self, mode, choice, Nround):
+    def play(self, mode, choices, Nround):
         """
-        param choice: int 1-37, the choice player placing bet
+        param choices: list of int(int 1-37), the choices a player placing bet
         param Nround: int, number of rounds the player plays
         return total_wager: float, accumulated wager
         return total_payment: float, accumulated payment
@@ -104,35 +106,37 @@ class Roulette(object):
             n += 1
             self.set_mode(mode)
             self.spin()
-            payment = self.check_payment(choice)
-            total_wager += 1
+            payment = self.check_payment(choices)
+            total_wager += 1*len(choices)
             total_payment += payment
         return total_wager, total_payment
+ 
     
 if __name__=="__main__":
-    Nround = 200000000
+    Nround = 20000000
+    choices = list(range(1,37+1))
     roulette = Roulette()
     
     tic = time.time()
-    total_wager, total_payment = roulette.play("normal", 1, Nround)
+    total_wager, total_payment = roulette.play("normal", choices, Nround)
     toc = time.time()
     print("\n<Mode Normal>")
     print("Elapsed time: {:.2f} seconds".format(toc-tic))
     print("Wager: {}, Payment: {}".format(total_wager, total_payment))
-    print("RTP: {:.4f}".format(total_payment*1.0/total_wager))
+    print("RTP: {:.9f}".format(total_payment*1.0/total_wager))
     
     tic = time.time()
-    total_wager, total_payment = roulette.play("mode1", 1, Nround)
+    total_wager, total_payment = roulette.play("mode1", choices, Nround)
     toc = time.time()
     print("\n<Mode 1>")
     print("Elapsed time: {:.2f} seconds".format(toc-tic))
     print("Wager: {}, Payment: {}".format(total_wager, total_payment))
-    print("RTP: {:.4f}".format(total_payment*1.0/total_wager))
+    print("RTP: {:.9f}".format(total_payment*1.0/total_wager))
 
     tic = time.time()
-    total_wager, total_payment = roulette.play("mode2", 1, Nround)
+    total_wager, total_payment = roulette.play("mode2", choices, Nround)
     toc = time.time()
     print("\n<Mode 2>")
     print("Elapsed time: {:.2f} seconds".format(toc-tic))
     print("Wager: {}, Payment: {}".format(total_wager, total_payment))
-    print("RTP: {:.4f}".format(total_payment*1.0/total_wager))
+    print("RTP: {:.9f}".format(total_payment*1.0/total_wager))
